@@ -1,0 +1,90 @@
+mkdir RMIProject
+cd RMIProject
+
+nano StringCheckInterface.java
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface StringCheckInterface extends Remote {
+    boolean isReverse(String str1, String str2) throws RemoteException;
+}
+-----------
+nano StringCheckServer.java
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+public class StringCheckServer extends UnicastRemoteObject implements StringCheckInterface {
+
+    public StringCheckServer() throws RemoteException {
+        super();
+    }
+
+    @Override
+    public boolean isReverse(String str1, String str2) throws RemoteException {
+        String reversedStr2 = new StringBuilder(str2).reverse().toString();
+        return str1.equals(reversedStr2);
+    }
+
+    public static void main(String[] args) {
+        try {
+            // Create an instance of the server
+            StringCheckServer server = new StringCheckServer();
+
+            // Create an RMI registry on port 1099
+            Registry registry = LocateRegistry.createRegistry(1099);
+
+            // Register the server with the name "StringCheckServer"
+            registry.bind("StringCheckServer", server);
+
+            System.out.println("Server is ready and waiting for requests...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+-------
+nano StringCheckClient.java
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+public class StringCheckClient {
+    public static void main(String[] args) {
+        String str1 = "hello";
+        String str2 = "olleh";
+
+        try {
+            // Locate the RMI registry and get the server object
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            StringCheckInterface server = (StringCheckInterface) registry.lookup("StringCheckServer");
+
+            // Call the remote method
+            boolean result = server.isReverse(str1, str2);
+
+            // Display the result
+            if (result) {
+                System.out.println(str1 + " is the reverse of " + str2);
+            } else {
+                System.out.println(str1 + " is not the reverse of " + str2);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+-----
+javac *.java
+cd RMIProject
+rmiregistry 1099 &
+
+
+In the first terminal (where the code is compiled), start the server:
+java StringCheckServer
+java StringCheckClient
+
+
+
+
