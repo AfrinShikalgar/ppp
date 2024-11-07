@@ -1,0 +1,68 @@
+1.Install JDK (Java Development Kit)
+2.Install NetBeans IDE
+3.Install GlassFish Server
+//Install JDK on Ubuntu
+sudo apt update
+sudo apt install openjdk-11-jdk
+
+//Install NetBeans IDE
+https://netbeans.apache.org/download/index.html
+Or
+sudo apt install snapd
+sudo snap install netbeans --classic
+
+//Launch NetBeans
+Netbeans
+
+//install and Configure GlassFish Server
+https://javaee.github.io/glassfish/download
+Or
+wget https://download.eclipse.org/ee4j/glassfish/glassfish-6.2.5.zip
+
+//Extract GlassFish
+unzip glassfish-6.2.5.zip
+sudo mv glassfish6 /opt/
+
+//Start GlassFish Server
+cd /opt/glassfish6/bin
+./asadmin start-domain
+
+//Add GlassFish to NetBeans:
+Terminal:netbeans
+In NetBeans, go to Services > Servers.
+   Right-click and select Add Server.
+   Choose GlassFish Server, navigate to the GlassFish installation directory (/opt/glassfish6), and add it.
+
+//Create a SOAP-Based Web Service Project in NetBeans
+  //Open NetBeans and create a new web application:
+  File > New Project (Ctrl+Shift+N)
+Under Java Web, select Web Application and click Next.
+Name the project (e.g., CalculatorWSApplication) and choose a location.
+Select GlassFish Server and the Java EE version. Click Finish.
+ //Create the Web Service:
+      In the Projects window, right-click your project (CalculatorWSApplication) and
+choose New > Web Service.
+Name the web service (e.g., CalculatorWS) and the package (e.g., org.me.calculator).
+Click Finish.
+  //Add Operations (Methods):
+    In the Projects window, right-click the newly created web service and select Add Operation.
+Add the following operation:
+Name: add
+Return Type: int
+Parameters: int i, int j
+Implement the method to return the sum:
+public int add(int i, int j) {    return i + j; }
+//Remove Default hello() Operation:
+In the visual designer, remove the default hello() operation by right-clicking it and selecting Remove Operation.
+//Deploy the Web Service
+Build and Deploy the Project:
+Right-click the project in the Projects window and select Deploy.
+NetBeans will compile and deploy the web service to GlassFish.
+Test the Web Service:
+In the Projects window, expand the Web Services node.
+Right-click your web service (CalculatorWS) and select Test Web Service.
+A test client window will open in your browser where you can test the add method by providing values for i and j.
+// Consume the Web Service
+You can now create a client to consume this SOAP-based web service or test it with any SOAP client tool.
+
+
