@@ -1,0 +1,18 @@
+sudo apt update
+sudo apt install gcc g++
+gcc --version
+nano omp_hello.c
+#include <omp.h>
+#include <stdio.h>
+int main(int argc, char *argv[])
+{
+    #pragma omp parallel
+    {
+        printf("Hello world! I'm thread %d out of %d threads.\n",
+               omp_get_thread_num(), omp_get_num_threads());
+    }
+    return 0;
+}
+gcc -fopenmp -o omp_hello omp_hello.c
+export OMP_NUM_THREADS=4
+./omp_hello
